@@ -1,0 +1,13 @@
+{
+  "version": 2,
+  "dgSpecHash": "KB9+vsXIz1Z65X4ekwWU/BPcgAyQLjVw4hwa853PxiHWb7MtCUHEfyfKoyEdd3K1OVl8F30xgdl3r1t3VqT/XQ==",
+  "success": true,
+  "projectFilePath": "D:\\C#\\graph\\Graph\\Graph.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Vadim\\.nuget\\packages\\microsoft.netcore.platforms\\1.1.0\\microsoft.netcore.platforms.1.1.0.nupkg.sha512",
+    "C:\\Users\\Vadim\\.nuget\\packages\\microsoft.netcore.targets\\1.1.0\\microsoft.netcore.targets.1.1.0.nupkg.sha512",
+    "C:\\Users\\Vadim\\.nuget\\packages\\system.collections\\4.3.0\\system.collections.4.3.0.nupkg.sha512",
+    "C:\\Users\\Vadim\\.nuget\\packages\\system.runtime\\4.3.0\\system.runtime.4.3.0.nupkg.sha512"
+  ],
+  "logs": []
+}
