@@ -25,7 +25,8 @@ namespace Graph
         //List<Edge> E = new List<Edge>();
 
 
-        protected Dictionary<Vertex, List<Dictionary<Vertex, Weight>>> G = new Dictionary<Vertex, List<Dictionary<Vertex, Weight>>>();
+        private Dictionary<Vertex, List<Dictionary<Vertex, Weight>>> G = new Dictionary<Vertex, List<Dictionary<Vertex, Weight>>>();
+
         private List<Edge> Edges = new List<Edge>();
         private List<Vertex> Vertices = new List<Vertex>();
 
@@ -379,6 +380,24 @@ namespace Graph
             currVertexExodus = default;
             return res_vertices;
         }
+        
+
+
+        public List<Vertex> LoopInGraph()
+        {
+            List<Vertex> loop = new List<Vertex>();
+
+            foreach (var i in Edges)
+                if (i.X.Equals(i.Y))
+                {
+                    loop.Add(i.X);
+                }
+
+            return loop.Distinct().ToList<Vertex>();
+        }
+
+
+        
 
     }
 
@@ -402,10 +421,12 @@ namespace Graph
             return Equals(obj as Vertex);
         }
 
-        public  bool Equals(Vertex other)
+        private bool Equals(Vertex other)
         {
+            if (other == null) { return false; };
             return X == other.X;
         }
+
     }
 
 
@@ -442,4 +463,6 @@ namespace Graph
             return $"({X}, {Y}) - {W}";
         }
     }
+
+
 }
