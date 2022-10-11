@@ -41,11 +41,13 @@ namespace Graph
 
                         int it = Convert.ToInt32(Console.ReadLine());
                         Graph g = new Graph(pathes[it]);
-
+                        include_fl = true;
 
                         while (include_fl)
                         {
-                            Console.WriteLine("Choose action: \n0 - Add vertex,\n1 - Remove vertex,\n2 - Add edge\n3 - Remove Edge\n4 - Write to result file\n5 - Write to current file\n6 - exit ");
+                            Console.WriteLine("Choose action: \n0 - Add vertex,\n1 - Remove vertex,\n2 - Add edge" +
+                                "\n3 - Remove Edge\n4 - Write to result file\n5 - Write to current file\n6 - exit" +
+                                "\n7 - Task1.N9");
                             action = Convert.ToInt32(Console.ReadLine());
                             switch (action)
                             {
@@ -86,6 +88,15 @@ namespace Graph
                                     break;
                                 case 6:
                                     include_fl = false;
+                                    break;
+                                case 7:
+                                    Console.Write("Enter Vertex: ");
+                                    x = new Vertex((Convert.ToInt32(Console.ReadLine())));
+                                    List<Vertex> resList = g.HSofExodus(x);
+                                    Console.Write($"Вершины, полустепень исхода которых больше, чем у вершины{x.X}: ");
+
+                                    foreach (var i in resList)
+                                        Console.Write($"{i.X}, ");
                                     break;
                                 default:
                                     include_fl = false;

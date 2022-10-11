@@ -25,9 +25,9 @@ namespace Graph
         //List<Edge> E = new List<Edge>();
 
 
-        private Dictionary<Vertex, List<Dictionary<Vertex, Weight>>> G = new Dictionary<Vertex, List<Dictionary<Vertex, Weight>>>();
+        protected Dictionary<Vertex, List<Dictionary<Vertex, Weight>>> G = new Dictionary<Vertex, List<Dictionary<Vertex, Weight>>>();
         private List<Edge> Edges = new List<Edge>();
-        // private List<Vertex> Vvv = new List<Vertex>();
+        private List<Vertex> Vertices = new List<Vertex>();
 
         private List<Dictionary<Vertex, Weight>> V_list = new List<Dictionary<Vertex, Weight>>();
         private Dictionary<Vertex, Weight> tmp_value = new Dictionary<Vertex, Weight>();
@@ -98,7 +98,6 @@ namespace Graph
                 }         
             }
             GetEdges();
-            //GetVertex();
             WriteToCopyFile();
         }
 
@@ -106,7 +105,7 @@ namespace Graph
 
         #region Methods 
 
-        private void GetEdges() {
+        protected List<Edge> GetEdges() {
 
             foreach (var key in G.Keys)
             {
@@ -117,8 +116,20 @@ namespace Graph
                     }
                 }
             }
+
+            return Edges;
         }
 
+
+        protected List<Vertex> GetVertices()
+        {
+
+            foreach (var key in G.Keys)
+                Vertices.Add(key);
+           
+
+            return Vertices;
+        }
 
         public void AddVertex(Vertex v) {
             fl = true;
@@ -133,7 +144,8 @@ namespace Graph
                 V_list = new List<Dictionary<Vertex, Weight>>();
                 G.Add(v, V_list);
             }
-            //GetVertex();
+            Vertices.Clear();
+            GetVertices();
         }
 
         public void RemoveVertex(Vertex v) {
@@ -153,9 +165,8 @@ namespace Graph
                     
                 }
             }
-            
-            
-
+            Vertices.Clear();
+            GetVertices();
         }
 
 
@@ -336,6 +347,38 @@ namespace Graph
 
         #endregion
 
+
+
+        private int currVertexExodus = default;
+        public List<Vertex> HSofExodus(Vertex v)
+        {
+            Dictionary<Vertex, int> CountHSofExodus = new Dictionary<Vertex, int>();
+            List<Vertex> res_vertices = new List<Vertex>();
+            foreach (var i in G.Keys)
+            {
+                foreach (var j in G[i])
+                {
+                    CountHSofExodus.Add(i, j.Count);
+
+                    if (i.Equals(v))
+                    {
+                        currVertexExodus = j.Count;
+                    }
+                }
+
+            }
+
+            foreach (var i in CountHSofExodus)
+            {
+                if (!i.Key.Equals(v) && i.Value > currVertexExodus)
+                {
+                    res_vertices.Add(i.Key);
+
+                }
+            }
+            currVertexExodus = default;
+            return res_vertices;
+        }
 
     }
 
