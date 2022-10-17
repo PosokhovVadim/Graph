@@ -29,7 +29,7 @@ namespace Graph
 
             while (main_fl)
             {
-                Console.WriteLine("Choose action: \n1 - Make graph\n0 - Exit");
+                Console.WriteLine("Choose action: \n1 - Make one graph\n0 - Exit\n2 - Work with two graph");
                 action = Convert.ToInt32(Console.ReadLine());
                 switch (action)
                 {
@@ -105,23 +105,43 @@ namespace Graph
                                     foreach (var i in resList_1)
                                         Console.Write($"{i.X}, ");
                                     break;
+                                case 9:
+                                    Console.Write("Введите вершину:");
+
+                                    List<Vertex> resList_2 = g.NotAdjacentVerties(new Vertex((Convert.ToInt32(Console.ReadLine()))));
+
+                                    Console.Write($"Вершины не смежные с данной: ");
+                                    foreach (var i in resList_2)
+                                        Console.Write($"{i.X}, ");
+                                    break;
+                                
                                 default:
                                     include_fl = false;
                                     break;
-
+                            
                             }
 
                         }
                         break;
+                    case 2:
+                        Graph g_1 = new Graph(pathes[1]);
+                        Graph g_2 = new Graph(pathes[2]);
+                        g_1.SymmetricDifference(g_2);
+                        g_1.WriteToNewFile();
+                        break;
+
                     case 0:
                         main_fl = false;
                         break;
-
+                    
                     default:
                         main_fl = false;
                         break;
                 }
             }
+
+
+
               
         }
     }

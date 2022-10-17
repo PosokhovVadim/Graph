@@ -30,6 +30,15 @@ namespace Graph
         private List<Edge> Edges = new List<Edge>();
         private List<Vertex> Vertices = new List<Vertex>();
 
+        public List<Vertex> GetVertices()
+        {
+            return Vertices;
+        }
+
+        public List<Edge> GetEdges()
+        {
+            return Edges;
+        }
         private List<Dictionary<Vertex, Weight>> V_list = new List<Dictionary<Vertex, Weight>>();
         private Dictionary<Vertex, Weight> tmp_value = new Dictionary<Vertex, Weight>();
 
@@ -98,7 +107,8 @@ namespace Graph
 
                 }         
             }
-            GetEdges();
+            SetEdges();
+            SetVertices();
             WriteToCopyFile();
         }
 
@@ -106,8 +116,8 @@ namespace Graph
 
         #region Methods 
 
-        protected List<Edge> GetEdges() {
-
+        public List<Edge> SetEdges() {
+   
             foreach (var key in G.Keys)
             {
                 foreach (var list_values in G[key])
@@ -122,7 +132,7 @@ namespace Graph
         }
 
 
-        protected List<Vertex> GetVertices()
+        public List<Vertex> SetVertices()
         {
 
             foreach (var key in G.Keys)
@@ -146,7 +156,7 @@ namespace Graph
                 G.Add(v, V_list);
             }
             Vertices.Clear();
-            GetVertices();
+            SetVertices();
         }
 
         public void RemoveVertex(Vertex v) {
@@ -167,7 +177,7 @@ namespace Graph
                 }
             }
             Vertices.Clear();
-            GetVertices();
+            SetVertices();
         }
 
 
@@ -236,7 +246,7 @@ namespace Graph
                     }
                 }
                 Edges.Clear();
-                GetEdges();
+                SetEdges();
             }
         }
 
@@ -270,7 +280,7 @@ namespace Graph
 
                 }
                 Edges.Clear();
-                GetEdges();
+                SetEdges();
             }
         }
 
@@ -396,9 +406,99 @@ namespace Graph
             return loop.Distinct().ToList<Vertex>();
         }
 
+        public List<Vertex> NotAdjacentVerties(Vertex v)
+        {
+            List<Vertex> res = new List<Vertex>();
+            List<Vertex> tmp = new List<Vertex>();
+            
+            foreach (var i in Edges) {
 
-        
+                if (i.X.Equals(v))
+                {
+                    tmp.Add(i.Y);
+                }
+                else if (i.Y.Equals(v))
+                {
+                    tmp.Add(i.X);
+                }
+            }
 
+            bool fl = true;
+            foreach (var i in Vertices)
+            {
+                if (!i.Equals(v))
+                {
+                    foreach (var j in tmp)
+                    {
+                        if (i.Equals(j)) {
+                            fl = false;
+                        }
+                    }
+                    if (fl)
+                    {
+                        res.Add(i);
+
+                    }
+                    else
+                    {
+                        fl = true;
+                    }
+                }               
+            }
+            return res.Distinct().ToList<Vertex>();
+        }
+
+
+        //task2
+
+        public void SymmetricDifference(Graph graph) {
+            
+            List<Vertex> tmp_v = Vertices;
+            List<Edge> tmp_e = Edges;
+
+            foreach (var i in graph.GetVertices())
+            {
+                if (!ContaintsVertex(i))
+                    AddVertex(i);
+            }
+
+            Vertices.Distinct().ToList();
+            
+            foreach (var i in graph.GetEdges())
+            {
+                if (ContaintsEdge(i))
+                {
+                    RemoveEdge(i.X, i.Y);
+                }
+                else
+                {
+                    AddEdges(i);
+                }
+            }
+            Edges.Distinct().ToList();
+        }
+
+        private bool ContaintsVertex(Vertex v)
+        {
+            foreach (var i in G.Keys)
+            {
+                if (i.Equals(v))
+                    return true;
+            }
+            return false;
+        }
+
+        private bool ContaintsEdge(Edge e)
+        {
+
+            foreach (var i in Edges)
+            {
+                if (i.Equals(e))
+                    return true;
+            }
+
+            return false;
+        }
     }
 
     class Vertex{
@@ -443,10 +543,20 @@ namespace Graph
         {
             return $"{W}";
         }
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as Weight);
+        }
+
+        private bool Equals(Weight other)
+        {
+            if (other == null) { return false; };
+            return W == other.W;
+        }
 
 
     }
-       
+
     class Edge
     {
         public Vertex X { get; set; } 
@@ -461,6 +571,18 @@ namespace Graph
 
         public override string ToString() {
             return $"({X}, {Y}) - {W}";
+        }
+
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as Edge);
+        }
+
+        public bool Equals(Edge other)
+        {
+            if (other == null) { return false; };
+            return X.Equals(other.X) && X.Equals(other.X) && W.Equals(other.W);
+                
         }
     }
 
