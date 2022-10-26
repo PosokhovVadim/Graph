@@ -21,7 +21,11 @@ namespace Graph
             string[] pathes = { @"D:\C#\graph\Graph\adjacency_list_1.txt"
                               , @"D:\C#\graph\Graph\adjacency_list_2.txt"
                               , @"D:\C#\graph\Graph\adjacency_list_3.txt"
-                              , @"D:\C#\graph\Graph\adjacency_list_4.txt" };
+                              , @"D:\C#\graph\Graph\adjacency_list_4.txt"
+                              , @"D:\C#\graph\Graph\test5_38.txt"
+                              , @"D:\C#\graph\Graph\test5_38_2.txt"
+                              , @"D:\C#\graph\Graph\frame.txt"
+                              , @"D:\C#\graph\Graph\frame2.txt"};
 
             int action;
             int value;
@@ -47,7 +51,7 @@ namespace Graph
                         {
                             Console.WriteLine("Choose action: \n0 - Add vertex,\n1 - Remove vertex,\n2 - Add edge" +
                                 "\n3 - Remove Edge\n4 - Write to result file\n5 - Write to current file\n6 - exit" +
-                                "\n7 - Task1.N9 \n8 - Task1.N12");
+                                "\n7 - Task1.N9 \n8 - Task1.N12 \n13 - Create MST");
                             action = Convert.ToInt32(Console.ReadLine());
                             switch (action)
                             {
@@ -114,7 +118,41 @@ namespace Graph
                                     foreach (var i in resList_2)
                                         Console.Write($"{i.X}, ");
                                     break;
-                                
+                                case 11:
+
+                                    if (g.isCyclic())
+                                    {
+                                        Console.Write("Граф имеет циклы");
+                                    }
+                                    else Console.Write("Граф ацикличен");
+                                    break;
+
+                                case 12:
+                                    Console.Write("Введите вершину:");
+                                    foreach (var i in g.GetVertices())
+                                    {
+                                        Console.Write($"{i.X}, ");
+                                    }
+                                    int v = Convert.ToInt32(Console.ReadLine());
+                                    int j;
+                                    var list1 = g.GetVertices();
+                                    for (j = 0; j < list1.Count; j++)
+                                    {
+                                        if (list1[j].X == v)
+                                            break;
+                                    }
+
+                                    if (j != list1.Count)
+                                    {
+                                        g.BFS(list1.ElementAt(j));
+                                    }
+                                    else Console.Write("Такой вершины нет");
+
+                                    break;
+                                case 13:
+                                    g.MST();
+                                    g.WriteToNewFile();
+                                    break;
                                 default:
                                     include_fl = false;
                                     break;

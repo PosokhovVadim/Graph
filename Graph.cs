@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.IO;
 using System.Linq;
+using System.Collections;
 
 namespace Graph
 {
@@ -14,14 +15,15 @@ namespace Graph
         private bool IsOriented { get; set; } //ориентированный или нет
 
         public bool _isweighted;
-        public virtual bool isweighted { 
+        public virtual bool isweighted
+        {
             get { return _isweighted; }
             set { _isweighted = value; }
         }
         private string Path;
         private bool fl;
         //Vertex V = new Vertex();
-        
+
         //List<Edge> E = new List<Edge>();
 
 
@@ -45,14 +47,18 @@ namespace Graph
         Vertex x = new Vertex();
         Weight w = new Weight();
 
-        
+        private Dictionary<Vertex, bool> Visited = new Dictionary<Vertex, bool>();
+        private Dictionary<Vertex, bool> recVisited = new Dictionary<Vertex, bool>();
+
+
         #endregion
 
         #region constructors
         public Graph() { }
 
-        
-        public Graph(string path) {
+
+        public Graph(string path)
+        {
             Path = path;
             using (FileStream Source = new FileStream(path, FileMode.Open))
             {
@@ -81,7 +87,7 @@ namespace Graph
                             {
                                 x = new Vertex(a[j]);
                                 tmp_value.Add(x, null);
-                                
+
                             }
                             V_list.Add(tmp_value);
                         }
@@ -105,25 +111,31 @@ namespace Graph
                         G.Add(new Vertex(a[0]), V_list);
                     }
 
-                }         
+                }
             }
+            Vertices.Clear();
+            Edges.Clear();
             SetEdges();
             SetVertices();
             WriteToCopyFile();
+
+            
         }
 
         #endregion
 
         #region Methods 
 
-        public List<Edge> SetEdges() {
-   
+        public List<Edge> SetEdges()
+        {
+
             foreach (var key in G.Keys)
             {
                 foreach (var list_values in G[key])
                 {
-                    foreach (var value in list_values) {
-                        Edges.Add( new Edge(key, value.Key, value.Value));
+                    foreach (var value in list_values)
+                    {
+                        Edges.Add(new Edge(key, value.Key, value.Value));
                     }
                 }
             }
@@ -137,12 +149,13 @@ namespace Graph
 
             foreach (var key in G.Keys)
                 Vertices.Add(key);
-           
+
 
             return Vertices;
         }
 
-        public void AddVertex(Vertex v) {
+        public void AddVertex(Vertex v)
+        {
             fl = true;
             foreach (var key in G.Keys)
                 if (key.Equals(v))
@@ -159,7 +172,8 @@ namespace Graph
             SetVertices();
         }
 
-        public void RemoveVertex(Vertex v) {
+        public void RemoveVertex(Vertex v)
+        {
             foreach (var key in G.Keys)
             {
                 if (key.Equals(v))
@@ -173,7 +187,7 @@ namespace Graph
                         foreach (var value in list_values)
                             if (value.Key.Equals(v))
                                 list_values.Remove(value.Key);
-                    
+
                 }
             }
             Vertices.Clear();
@@ -181,13 +195,15 @@ namespace Graph
         }
 
 
-        private bool EdgeCheck(Edge edge) {
-            foreach (var i in Edges) {
+        private bool EdgeCheck(Edge edge)
+        {
+            foreach (var i in Edges)
+            {
                 if (edge.X.Equals(i.X) && edge.Y.Equals(i.Y))
                     return false;
             }
             return true;
-        
+
         }
         public void AddEdges(Edge edge)
         {
@@ -252,8 +268,10 @@ namespace Graph
 
 
 
-        public void RemoveEdge(Vertex v1, Vertex v2) {
-            if (exist(v1,v2)) {
+        public void RemoveEdge(Vertex v1, Vertex v2)
+        {
+            if (exist(v1, v2))
+            {
                 foreach (var key in G.Keys)
                 {
                     if (key.X == v1.X)
@@ -296,7 +314,8 @@ namespace Graph
 
         }
 
-        public void WriteToNewFile() {
+        public void WriteToNewFile()
+        {
             string path = @"D:\C#\graph\Graph\result.txt";
             using (FileStream file = new FileStream(path, FileMode.Create))
             {
@@ -326,9 +345,11 @@ namespace Graph
             }
         }
 
-        public void WriteToCopyFile() {
+        public void WriteToCopyFile()
+        {
             string path = @"D:\C#\graph\Graph\copy.txt";
-            using (FileStream file = new FileStream(path, FileMode.Create)) {
+            using (FileStream file = new FileStream(path, FileMode.Create))
+            {
                 using (StreamWriter write = new StreamWriter(file))
                 {
                     write.WriteLine((Convert.ToInt32(IsWeighted)).ToString());
@@ -353,12 +374,10 @@ namespace Graph
 
                 }
             }
-        
+
         }
 
         #endregion
-
-
 
         private int currVertexExodus = default;
         public List<Vertex> HSofExodus(Vertex v)
@@ -390,7 +409,7 @@ namespace Graph
             currVertexExodus = default;
             return res_vertices;
         }
-        
+
 
 
         public List<Vertex> LoopInGraph()
@@ -410,8 +429,9 @@ namespace Graph
         {
             List<Vertex> res = new List<Vertex>();
             List<Vertex> tmp = new List<Vertex>();
-            
-            foreach (var i in Edges) {
+
+            foreach (var i in Edges)
+            {
 
                 if (i.X.Equals(v))
                 {
@@ -430,7 +450,8 @@ namespace Graph
                 {
                     foreach (var j in tmp)
                     {
-                        if (i.Equals(j)) {
+                        if (i.Equals(j))
+                        {
                             fl = false;
                         }
                     }
@@ -443,7 +464,7 @@ namespace Graph
                     {
                         fl = true;
                     }
-                }               
+                }
             }
             return res.Distinct().ToList<Vertex>();
         }
@@ -451,8 +472,9 @@ namespace Graph
 
         //task2
 
-        public void SymmetricDifference(Graph graph) {
-            
+        public void SymmetricDifference(Graph graph)
+        {
+
             List<Vertex> tmp_v = Vertices;
             List<Edge> tmp_e = Edges;
 
@@ -463,7 +485,7 @@ namespace Graph
             }
 
             Vertices.Distinct().ToList();
-            
+
             foreach (var i in graph.GetEdges())
             {
                 if (ContaintsEdge(i))
@@ -499,7 +521,205 @@ namespace Graph
 
             return false;
         }
+
+
+        private bool isCyclicHellper(Vertex u) {
+
+            if (recVisited[u])
+                return true;
+
+            if (Visited[u])
+                return false;
+
+            Visited[u] = true;
+            recVisited[u] = true;
+            List<Dictionary<Vertex, Weight>> adj = G[u];
+            //Console.Write($"{u.X} ");
+            foreach (var i in adj)
+            {
+                foreach (var j in i.Keys)
+                {
+                    int iter = 0;
+                    foreach (var k in G.Keys)
+                    {
+                        if (k.Equals(j))
+                            break;
+                        iter++;
+                    }
+                    if (isCyclicHellper(Visited.ElementAt(iter).Key))
+                        return true;
+
+                }
+            }
+
+            recVisited[u] = false;
+
+            return false;
+
+        }
+        //17
+        public bool isCyclic()
+        {
+            foreach (var i in G.Keys) { Visited.Add(i, false);  }
+
+            foreach (var i in G.Keys) { recVisited.Add(i, false); }
+
+            foreach (var i in G.Keys)
+            {
+                if (isCyclicHellper(i)) {
+                    foreach (var j in G.Keys) { Visited.Remove(j); }
+
+                    foreach (var j in G.Keys) { recVisited.Remove(j); }
+
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        //38
+        
+        public List<Vertex> BFS(Vertex v)
+        {
+            var cycles = new List<Vertex>();
+
+            Queue<Vertex> q = new Queue<Vertex>();
+
+            foreach (var i in G.Keys) { Visited.Add(i, false); }
+            q.Enqueue(v);
+            Visited[v] = true;
+            ///......
+
+            
+            while (q.Count != 0)
+            {
+                var ver = q.Dequeue();
+                foreach (var edge in Edges)
+                {
+
+                    if (edge.X.Equals(ver))
+                    {
+                        var r = new KeyValuePair<Vertex, bool>();
+                        foreach (var adj in Visited)
+                        {
+                            if (adj.Key.Equals(edge.Y) && adj.Value == false)
+                            {
+                                r = adj;
+                                q.Enqueue(edge.Y);
+
+                            }
+                            if (v.Equals(edge.Y) && adj.Value == true) {
+                                cycles.Add(ver);
+
+                            }
+                        }
+                        if (r.Key != null)
+                        {
+                            Visited[r.Key] = true;
+
+                        }
+                    }
+                }
+            }
+
+
+            ///......
+            foreach (var j in G.Keys) { Visited.Remove(j); }
+            return cycles.Distinct().ToList<Vertex>();
+        }
+
+        public void allShortestCylces()
+        {
+
+        }
+        //каркас прима
+        private void FixDirection()
+        {
+            var tmp_edges = Edges;
+            for (int i = tmp_edges.Count; i > 0; --i)
+            {
+                var edge = tmp_edges[i - 1];
+                RemoveEdge(edge.X, edge.Y);
+                AddEdges(new Edge(edge.Y, edge.X, edge.W));
+            }
+
+            foreach (var i in resMST.Keys)
+            {
+                if (resMST[i].Count == 0)
+                    resMST.Remove(i);
+            }
+
+        }
+        private Dictionary<Vertex, List<Dictionary<Vertex, Weight>>> resMST = new Dictionary<Vertex, List<Dictionary<Vertex, Weight>>>();
+        private bool MSTContainsHellper(Vertex v) { 
+            foreach (var i in resMST)
+            {
+                if (i.Key.Equals(v))
+                    return true;
+            }
+            return false;
+        }
+
+        public void MST()
+        {
+
+            List<Edge> EdgesFrame = new List<Edge>();
+            IDictionary res = resMST;
+            var adj = new Dictionary<Vertex, Weight>();
+            resMST.Add(G.First().Key, new List<Dictionary<Vertex, Weight>>());
+            while(resMST.Count != G.Count)
+            {
+                var tmp = new Dictionary<Vertex, Weight>();
+                var curV = new Vertex();
+                
+                foreach (var vertex in resMST.Keys)
+                {
+                    
+                    foreach (var edge in Edges)
+                    {
+
+                        if (vertex.Equals(edge.X) && !MSTContainsHellper(edge.Y))
+                        {
+                            
+                            if (tmp.Count == 0)
+                            {
+                                curV = vertex;
+                                tmp.Add(edge.Y, edge.W);
+                            }
+                            else if (edge.W.W < tmp.First().Value.W)
+                            {
+                                curV = vertex;
+                                tmp.Remove(tmp.First().Key);
+                                tmp.Add(edge.Y, edge.W);
+                            }
+
+                        }
+
+
+                    }
+                    
+
+                }
+
+                resMST[curV].Add(tmp);
+                resMST.Add(tmp.First().Key, new List<Dictionary<Vertex, Weight>>());
+
+            
+
+  
+
+            }
+
+            G = resMST;
+            Edges.Clear();
+            Vertices.Clear();
+            SetEdges();
+            SetVertices();
+            FixDirection();
+        }
     }
+
 
     class Vertex{
 
@@ -543,6 +763,7 @@ namespace Graph
         {
             return $"{W}";
         }
+
         public override bool Equals(object obj)
         {
             return Equals(obj as Weight);
@@ -563,6 +784,7 @@ namespace Graph
         public Vertex Y { get; set; } 
         public Weight W { get; set; }
 
+        public Edge() { }
         public Edge(Vertex x, Vertex y, Weight w) {
             X = x;
             Y = y;
