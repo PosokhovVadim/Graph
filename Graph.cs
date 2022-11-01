@@ -20,6 +20,8 @@ namespace Graph
             get { return _isweighted; }
             set { _isweighted = value; }
         }
+        public bool _isoriented { get { return IsOriented; } }
+        
         private string Path;
         private bool fl;
         //Vertex V = new Vertex();
@@ -49,6 +51,7 @@ namespace Graph
 
         private Dictionary<Vertex, bool> Visited = new Dictionary<Vertex, bool>();
         private Dictionary<Vertex, bool> recVisited = new Dictionary<Vertex, bool>();
+        private Dictionary<Vertex, int> SP = new Dictionary<Vertex, int>();
 
 
         #endregion
@@ -579,19 +582,68 @@ namespace Graph
         }
 
         //38
-        
-        public List<Vertex> BFS(Vertex v)
+
+        public void AllPathes(Vertex v, int depth, int _depth, List<Vertex> Path, List<List<Vertex>> pathes) {
+
+
+            List<Dictionary<Vertex, Weight>> adj = new List<Dictionary<Vertex, Weight>>();
+            foreach (var key in G.Keys)
+            {
+                if (key.Equals(v))
+                {
+                    adj = G[key];
+                    break;
+
+                }
+            }
+            if (depth == _depth || adj[0].Count == 0)
+            {
+                _depth -= 1;
+                var tmp = new List<Vertex>();
+                foreach (var item in Path)
+                {
+                    var i = new Vertex();
+                    i.X = item.X;
+                    tmp.Add(i);
+                }
+                pathes.Add(tmp);
+                Path.Remove(Path.Last());
+
+            }
+            else
+            {
+                foreach (var i in adj)
+                 {
+
+                        foreach (var vertex in i)
+                        {
+                            var tmpList = new List<Vertex>();
+                            Path.Add(vertex.Key);
+                            AllPathes(vertex.Key, depth, _depth + 1, Path, pathes);
+                        }
+                    if (Path.Count != 0)
+                    {
+                        Path.Remove(Path.Last());
+
+                    }
+
+                }
+            }
+        }
+        public List<List<Vertex>> AllShortestCycles = new List<List<Vertex>>();
+        public void BFS(Vertex v)
         {
-            var cycles = new List<Vertex>();
+            var cyclesVertex = new List<Vertex>();
 
             Queue<Vertex> q = new Queue<Vertex>();
-
+            Stack<Vertex> ShortestPAth = new Stack<Vertex>();
             foreach (var i in G.Keys) { Visited.Add(i, false); }
+            SP.Add(v, 0);
             q.Enqueue(v);
             Visited[v] = true;
             ///......
-
-            
+            int CountPath = int.MaxValue;
+            Vertex shv = new Vertex();
             while (q.Count != 0)
             {
                 var ver = q.Dequeue();
@@ -607,12 +659,16 @@ namespace Graph
                             {
                                 r = adj;
                                 q.Enqueue(edge.Y);
-
+                                SP[edge.Y] = SP[ver] + 1;
+                                
                             }
-                            if (v.Equals(edge.Y) && adj.Value == true) {
-                                cycles.Add(ver);
-
+                            
+                            if (adj.Key.Equals(edge.Y) && v.Equals(edge.Y) && adj.Value == true && SP[ver] <= CountPath) {
+                                shv = ver;
+                                cyclesVertex.Add(ver);
+                                CountPath = SP[ver];
                             }
+                            
                         }
                         if (r.Key != null)
                         {
@@ -623,15 +679,72 @@ namespace Graph
                 }
             }
 
-
             ///......
             foreach (var j in G.Keys) { Visited.Remove(j); }
-            return cycles.Distinct().ToList<Vertex>();
+            if (cyclesVertex.Count != 0)
+            {
+                int depth = SP[shv];
+                var Path = new List<Vertex>();
+                var pathes = new List<List<Vertex>>();
+
+                AllPathes(v, depth, 0, Path, pathes);
+                for (int i = 0; i < pathes.Count; i++)
+                {
+                    pathes[i].Insert(0, v);
+                }
+
+
+                for (int i = pathes.Count - 1; i >= 0; i--)
+                {
+                    var path = pathes[i];
+                    bool fl = false;
+                    foreach (var j in cyclesVertex)
+                    {
+                        if (path.Last().Equals(j))
+                        {
+                            fl = true;
+                            break;
+                        }
+                    }
+                    if (!fl)
+                    {
+                        pathes.Remove(path);
+                    }
+                }
+
+                foreach (var res in pathes)
+                {
+                    AllShortestCycles.Add(res);
+                }
+            }
         }
 
         public void allShortestCylces()
         {
+            foreach (var vertex in Vertices)
+            {
+                BFS(vertex);
+            }
+            int min = int.MaxValue;
+            foreach (var cycle in AllShortestCycles)
+            {
+                if (cycle.Count < min)
+                {
+                    min = cycle.Count;
+                }
+            }
 
+            foreach (var cycle in AllShortestCycles)
+            {
+                if (cycle.Count == min)
+                {
+                    foreach (var vertex in cycle)
+                    {
+                        Console.Write($"{vertex.X}, ");
+                    }
+                    Console.WriteLine();
+                }
+            }
         }
         //каркас прима
         private void FixDirection()

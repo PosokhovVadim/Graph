@@ -128,30 +128,23 @@ namespace Graph
                                     break;
 
                                 case 12:
-                                    Console.Write("Введите вершину:");
-                                    foreach (var i in g.GetVertices())
-                                    {
-                                        Console.Write($"{i.X}, ");
-                                    }
-                                    int v = Convert.ToInt32(Console.ReadLine());
-                                    int j;
-                                    var list1 = g.GetVertices();
-                                    for (j = 0; j < list1.Count; j++)
-                                    {
-                                        if (list1[j].X == v)
-                                            break;
-                                    }
 
-                                    if (j != list1.Count)
+                                    if (g._isoriented)
                                     {
-                                        g.BFS(list1.ElementAt(j));
+                                        g.allShortestCylces();
+                                     
                                     }
-                                    else Console.Write("Такой вершины нет");
+                                    else
+                                    {
+                                        Console.WriteLine("Граф неориентированный");
 
+                                    }
                                     break;
+
                                 case 13:
-                                    g.MST();
-                                    g.WriteToNewFile();
+                                        g.MST();
+                                        g.WriteToNewFile();
+
                                     break;
                                 default:
                                     include_fl = false;
