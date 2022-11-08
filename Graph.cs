@@ -461,7 +461,6 @@ namespace Graph
                     if (fl)
                     {
                         res.Add(i);
-
                     }
                     else
                     {

@@ -51,7 +51,7 @@ namespace Graph
                         {
                             Console.WriteLine("Choose action: \n0 - Add vertex,\n1 - Remove vertex,\n2 - Add edge" +
                                 "\n3 - Remove Edge\n4 - Write to result file\n5 - Write to current file\n6 - exit" +
-                                "\n7 - Task1.N9 \n8 - Task1.N12 \n13 - Create MST");
+                                "\n7 - Task1.N9 \n8 - Task1.N12 \n9 - Task1.N15 \n10 - Task2.N17 \n11 - Task2.N38 \n12 - Create MST");
                             action = Convert.ToInt32(Console.ReadLine());
                             switch (action)
                             {
@@ -118,16 +118,20 @@ namespace Graph
                                     foreach (var i in resList_2)
                                         Console.Write($"{i.X}, ");
                                     break;
-                                case 11:
-
-                                    if (g.isCyclic())
+                                case 10:
+                                    if (g._isoriented)
                                     {
-                                        Console.Write("Граф имеет циклы");
+
+                                        if (g.isCyclic())
+                                        {
+                                            Console.WriteLine("Граф имеет циклы");
+                                        }
+                                        else Console.WriteLine("Граф ацикличен");
                                     }
-                                    else Console.Write("Граф ацикличен");
+                                    else Console.WriteLine("Граф не ориентированный");
                                     break;
 
-                                case 12:
+                                case 11:
 
                                     if (g._isoriented)
                                     {
@@ -141,10 +145,12 @@ namespace Graph
                                     }
                                     break;
 
-                                case 13:
+                                case 12:
+                                    if (g._isweighted && !g._isoriented)
+                                    {
                                         g.MST();
                                         g.WriteToNewFile();
-
+                                    }
                                     break;
                                 default:
                                     include_fl = false;
