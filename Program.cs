@@ -25,7 +25,10 @@ namespace Graph
                               , @"D:\C#\graph\Graph\test5_38.txt"
                               , @"D:\C#\graph\Graph\test5_38_2.txt"
                               , @"D:\C#\graph\Graph\frame.txt"
-                              , @"D:\C#\graph\Graph\frame2.txt"};
+                              , @"D:\C#\graph\Graph\frame2.txt"
+                              , @"D:\C#\graph\Graph\MaxFlow1.txt"
+                              , @"D:\C#\graph\Graph\MaxFlow2.txt"
+                              , @"D:\C#\graph\Graph\MaxFlow3.txt"};
 
             int action;
             int value;
@@ -51,7 +54,8 @@ namespace Graph
                         {
                             Console.WriteLine("Choose action: \n0 - Add vertex,\n1 - Remove vertex,\n2 - Add edge" +
                                 "\n3 - Remove Edge\n4 - Write to result file\n5 - Write to current file\n6 - exit" +
-                                "\n7 - Task1.N9 \n8 - Task1.N12 \n9 - Task1.N15 \n10 - Task2.N17 \n11 - Task2.N38 \n12 - Create MST");
+                                "\n7 - Task1.N9 \n8 - Task1.N12 \n9 - Task1.N15 \n10 - Task2.N17 \n11 - Task2.N38 \n12 - Create MST " +
+                                "\n16 - Find Max Flow");
                             action = Convert.ToInt32(Console.ReadLine());
                             switch (action)
                             {
@@ -151,6 +155,16 @@ namespace Graph
                                         g.MST();
                                         g.WriteToNewFile();
                                     }
+                                
+                                    break;
+                                case 13:
+                                    break;
+                                case 14:
+                                    break;
+                                case 15:
+                                    break;
+                                case 16:
+                                    Console.WriteLine(g.Max_Flow());
                                     break;
                                 default:
                                     include_fl = false;

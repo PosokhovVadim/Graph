@@ -830,6 +830,191 @@ namespace Graph
             SetVertices();
             FixDirection();
         }
+
+        private List<Vertex> CH = new List<Vertex>();
+
+        private bool ContainsHellper(Vertex v)
+        {
+            foreach (var i in CH)
+            {
+                if (i.Equals(v))
+                    return true;
+            }
+            return false;
+        }
+
+        private int ChangeBandwidth(List<Edge> e)
+        {
+            if (e != null)
+            {
+                //находим минимум
+                int min = int.MaxValue;
+                foreach (var edge in e)
+                {
+                    if (edge.W.W < min)
+                        min = edge.W.W;
+                }
+
+                //меняем сеть 
+
+                foreach (var key in G.Keys)
+                {
+                    foreach (var value in G[key])
+                    {
+                        for (int j = value.Count - 1; j >= 0; j--)
+                        {
+                            foreach (var edge in e)
+                            {
+                                var keyInDict = value.ElementAt(j).Key;
+                                if (key.Equals(edge.X) && keyInDict.Equals(edge.Y))
+                                {
+                                    value[keyInDict].W -= min;
+                                    value[keyInDict].W2 += min;
+                                    break;
+                                }
+
+                            }
+
+                        }
+                    }
+                }
+
+
+
+                return min;
+            }
+            else return 0;
+        }
+        private int Iteration(Vertex f, Vertex t, Vertex curV, List<Vertex> prev, bool fl, List<Edge> e)
+        {
+
+            while (!curV.Equals(t) && fl)
+            {
+                List<Dictionary<Vertex, Weight>> adj = new List<Dictionary<Vertex, Weight>>();
+                foreach (var key in G.Keys)
+                {
+                    if (key.Equals(curV))
+                    {
+                        adj = G[key];
+                        break;
+                    }    
+                }
+                var tmp = new Dictionary<Vertex, Weight>();
+                var tmpCurV = new Vertex(curV.X);
+                //1 - пропускная способность > 0, 2 - она максимальна, 3- вершина не входит в множество
+                
+                foreach (var i in adj)
+                {
+                    foreach (var j in i.Keys)
+                    {
+                        var tmpValue = i[j];
+                        if (tmp.Count == 0)
+                        {
+                            if (!ContainsHellper(j) && tmpValue.W > 0)
+                            {
+                                curV = j;
+                                tmp.Add(j, tmpValue);
+                            }
+                            else continue;
+                        }
+                        else if (tmpValue.W > tmp.First().Value.W && tmpValue.W > 0 && !ContainsHellper(j))
+                        {
+                            curV = j;
+                            tmp.Remove(tmp.First().Key);
+                            tmp.Add(j, tmpValue);
+                        }
+
+                        
+                    }
+                }
+
+                if (tmpCurV.Equals(curV))
+                {
+                    if (prev.Count() != 0)
+                    {
+                        curV = prev.Last();
+                        prev.Remove(prev.Last());
+                    }
+                    else
+                        fl = false;
+                    if (e.Count() != 0)
+                        e.Remove(e.Last());
+                    //Iteration(f, t, curV, prev, fl, e);
+                }
+                else
+                {
+                    CH.Add(curV);
+                    e.Add(new Edge(tmpCurV, tmp.First().Key, tmp.First().Value));
+                    prev.Add(tmpCurV);
+
+                }
+
+
+            }
+
+            //изменяем остаточную сеть, и находим максимальный поток по данному пути
+            if (fl)
+                return ChangeBandwidth(e);
+            else
+                return -1;
+        }
+        public int Max_Flow()
+        {
+            //
+            int maxFlow = 0;
+            /// Добавить для каждых ребер дополнительное знчение веса (для обратного прохода) - complited
+            /// Далее создать метод принадлежности к множеству
+            /// Прописать отдельный метод изменения пропуской способности
+            /// Идти по значениям будет по типу MST только будем брать не минимальное а максимальное 
+            /// 
+
+            //Для всех ребер положим остаточную пропускую способность равную первым весам ребер
+            Dictionary<Vertex, List<Dictionary<Vertex, Weight>>> FlowGraph = new Dictionary<Vertex, List<Dictionary<Vertex, Weight>>>();
+
+            foreach (var values_List in G.Values)
+            {
+                foreach (var item in values_List)
+                {
+                    for (int i = item.Count - 1; i > 0; i--)
+                    {
+                        var key = item.ElementAt(i).Key;
+                        var new_Weight = new Weight(item[key].W, 0);
+                        item[key] = new_Weight;
+                    }
+                    
+                }
+            }
+
+            Edges.Clear();
+            Vertices.Clear();
+            SetEdges();
+            SetVertices();
+
+            bool fl = true;
+            Vertex f = G.Keys.ElementAt(0);
+            Vertex t = G.Keys.ElementAt(G.Keys.Count - 1);
+            
+            while (fl)
+            {
+                var curV = f;
+                CH.Add(curV);
+                List<Edge> e = new List<Edge>();
+                int curFlow = Iteration(f, t, curV, new List<Vertex>(), fl, e);
+                if (curFlow != -1)
+                {
+                    maxFlow += curFlow;
+                }
+                else
+                    fl = false;
+                
+                CH.Clear();
+            }
+
+
+            return maxFlow;
+        }
+
+
     }
 
 
@@ -864,17 +1049,24 @@ namespace Graph
 
     class Weight {
         public int W { get; set; }
-
+        public int W2 { get; set; }
         public Weight() { }
         public Weight(int w)
         {
             W = w;
         }
 
+        public Weight(int w, int w2)
+        {
+            W = w;
+            W2 = w2;
+        }
+        
         public override string ToString()
         {
             return $"{W}";
         }
+
 
         public override bool Equals(object obj)
         {
@@ -919,6 +1111,5 @@ namespace Graph
                 
         }
     }
-
 
 }
