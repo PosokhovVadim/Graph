@@ -21,7 +21,7 @@ namespace Graph
             set { _isweighted = value; }
         }
         public bool _isoriented { get { return IsOriented; } }
-        
+
         private string Path;
         private bool fl;
         //Vertex V = new Vertex();
@@ -122,7 +122,7 @@ namespace Graph
             SetVertices();
             WriteToCopyFile();
 
-            
+
         }
 
         #endregion
@@ -525,7 +525,8 @@ namespace Graph
         }
 
 
-        private bool isCyclicHellper(Vertex u) {
+        private bool isCyclicHellper(Vertex u)
+        {
 
             if (recVisited[u])
                 return true;
@@ -562,13 +563,14 @@ namespace Graph
         //17
         public bool isCyclic()
         {
-            foreach (var i in G.Keys) { Visited.Add(i, false);  }
+            foreach (var i in G.Keys) { Visited.Add(i, false); }
 
             foreach (var i in G.Keys) { recVisited.Add(i, false); }
 
             foreach (var i in G.Keys)
             {
-                if (isCyclicHellper(i)) {
+                if (isCyclicHellper(i))
+                {
                     foreach (var j in G.Keys) { Visited.Remove(j); }
 
                     foreach (var j in G.Keys) { recVisited.Remove(j); }
@@ -582,7 +584,8 @@ namespace Graph
 
         //38
 
-        public void AllPathes(Vertex v, int depth, int _depth, List<Vertex> Path, List<List<Vertex>> pathes) {
+        public void AllPathes(Vertex v, int depth, int _depth, List<Vertex> Path, List<List<Vertex>> pathes)
+        {
 
 
             List<Dictionary<Vertex, Weight>> adj = new List<Dictionary<Vertex, Weight>>();
@@ -612,14 +615,14 @@ namespace Graph
             else
             {
                 foreach (var i in adj)
-                 {
+                {
 
-                        foreach (var vertex in i)
-                        {
-                            var tmpList = new List<Vertex>();
-                            Path.Add(vertex.Key);
-                            AllPathes(vertex.Key, depth, _depth + 1, Path, pathes);
-                        }
+                    foreach (var vertex in i)
+                    {
+                        var tmpList = new List<Vertex>();
+                        Path.Add(vertex.Key);
+                        AllPathes(vertex.Key, depth, _depth + 1, Path, pathes);
+                    }
                     if (Path.Count != 0)
                     {
                         Path.Remove(Path.Last());
@@ -659,15 +662,16 @@ namespace Graph
                                 r = adj;
                                 q.Enqueue(edge.Y);
                                 SP[edge.Y] = SP[ver] + 1;
-                                
+
                             }
-                            
-                            if (adj.Key.Equals(edge.Y) && v.Equals(edge.Y) && adj.Value == true && SP[ver] <= CountPath) {
+
+                            if (adj.Key.Equals(edge.Y) && v.Equals(edge.Y) && adj.Value == true && SP[ver] <= CountPath)
+                            {
                                 shv = ver;
                                 cyclesVertex.Add(ver);
                                 CountPath = SP[ver];
                             }
-                            
+
                         }
                         if (r.Key != null)
                         {
@@ -764,7 +768,8 @@ namespace Graph
 
         }
         private Dictionary<Vertex, List<Dictionary<Vertex, Weight>>> resMST = new Dictionary<Vertex, List<Dictionary<Vertex, Weight>>>();
-        private bool MSTContainsHellper(Vertex v) { 
+        private bool MSTContainsHellper(Vertex v)
+        {
             foreach (var i in resMST)
             {
                 if (i.Key.Equals(v))
@@ -780,20 +785,20 @@ namespace Graph
             IDictionary res = resMST;
             var adj = new Dictionary<Vertex, Weight>();
             resMST.Add(G.First().Key, new List<Dictionary<Vertex, Weight>>());
-            while(resMST.Count != G.Count)
+            while (resMST.Count != G.Count)
             {
                 var tmp = new Dictionary<Vertex, Weight>();
                 var curV = new Vertex();
-                
+
                 foreach (var vertex in resMST.Keys)
                 {
-                    
+
                     foreach (var edge in Edges)
                     {
 
                         if (vertex.Equals(edge.X) && !MSTContainsHellper(edge.Y))
                         {
-                            
+
                             if (tmp.Count == 0)
                             {
                                 curV = vertex;
@@ -810,16 +815,16 @@ namespace Graph
 
 
                     }
-                    
+
 
                 }
 
                 resMST[curV].Add(tmp);
                 resMST.Add(tmp.First().Key, new List<Dictionary<Vertex, Weight>>());
 
-            
 
-  
+
+
 
             }
 
@@ -897,12 +902,12 @@ namespace Graph
                     {
                         adj = G[key];
                         break;
-                    }    
+                    }
                 }
                 var tmp = new Dictionary<Vertex, Weight>();
                 var tmpCurV = new Vertex(curV.X);
                 //1 - пропускная способность > 0, 2 - она максимальна, 3- вершина не входит в множество
-                
+
                 foreach (var i in adj)
                 {
                     foreach (var j in i.Keys)
@@ -924,7 +929,7 @@ namespace Graph
                             tmp.Add(j, tmpValue);
                         }
 
-                        
+
                     }
                 }
 
@@ -981,7 +986,7 @@ namespace Graph
                         var new_Weight = new Weight(item[key].W, 0);
                         item[key] = new_Weight;
                     }
-                    
+
                 }
             }
 
@@ -993,7 +998,7 @@ namespace Graph
             bool fl = true;
             Vertex f = G.Keys.ElementAt(0);
             Vertex t = G.Keys.ElementAt(G.Keys.Count - 1);
-            
+
             while (fl)
             {
                 var curV = f;
@@ -1006,7 +1011,7 @@ namespace Graph
                 }
                 else
                     fl = false;
-                
+
                 CH.Clear();
             }
 
@@ -1015,16 +1020,143 @@ namespace Graph
         }
 
 
+        public List<Vertex> ShosrtestPath_Dijkstra(Vertex u, Vertex v)
+        {
+            //
+            int from = u.X;
+            int to = v.X;
+            int n = Vertices.Count() + 1;
+            int[] D = new int[n];
+            int[] P = new int[n];
+
+            int[,] C = new int[n, n];
+
+            bool[] visited = new bool[n];
+            foreach (var edge in Edges)
+            {
+                C[edge.X.X, edge.Y.X] = edge.W.W;
+            }
+
+            for (int i = 0; i < D.Length; i++)
+            {
+                if (C[from, i] == 0) D[i] = int.MaxValue; else D[i] = C[from, i];
+
+                visited[i] = false;
+            }
+
+            for (int i = 0; i < n - 1; i++)
+            {
+
+                int CurMin = int.MaxValue;
+                int w = int.MaxValue;
+                int tmp = w;
+                for (int j = 0; j < n; j++)
+                {
+                    if (visited[j] == false && D[j] <= CurMin)
+                    {
+                        CurMin = D[j];
+                        w = j;
+                    }
+                }
+                visited[w] = true;
+
+                if (visited[to])
+                {
+                    break;
+                }
+
+                for (int j = 0; j < n; j++)
+                {
+                    if (visited[j] == false && C[w, j] != 0 /*&& D[j] != int.MaxValue*/)
+                    {
+                        if (D[w] + C[w, j] < D[j])
+                        {
+                            D[j] = D[w] + C[w, j];
+                            P[j] = w;
+                        }
+
+                    }
+                }
+
+
+            }
+
+            List<Vertex> ShortPath = new List<Vertex>();
+            while (P[to] != 0)
+            {
+                ShortPath.Add(new Vertex(P[to]));
+                to = P[to];
+            }
+
+            if (D[to] != int.MaxValue)
+            {
+                ShortPath.Add(u);
+                ShortPath.Reverse();
+                ShortPath.Add(v);
+            }
+            return ShortPath;
+        }
+
+        public void Floyd(Vertex u, Vertex v)
+        {
+            //
+            int from = u.X;
+            int to = v.X;
+            int n = Vertices.Count();
+
+            int[,] C = new int[n, n];
+            int[,] H = new int[n, n];
+
+            foreach (var edge in Edges)
+            {
+                int i = edge.X.X;
+                int j = edge.Y.X;
+                C[i - 1, j - 1] = edge.W.W;
+            }
+
+            for (int i = 0; i < n; i++)
+            {
+                for (int j = 0; j < n; j++)
+                {
+
+                    if (C[i, j] == 0 && i != j) { C[i, j] = int.MaxValue; }
+                    if (i == j) C[i, j] = 0;
+                }
+            }
+            for (int k = 0; k < n; k++)
+            {
+                for (int i = 0; i < n; i++)
+                {
+                        for (int j = 0; j < n; j++)
+                        {
+                            if (C[i,j] > C[k, j] + C[i,k] && C[i,k] != int.MaxValue && C[k,j] != int.MaxValue )
+                            {
+                                C[i, j] = C[k, j] + C[i, k];
+                                H[i, j] = k;
+                            }
+                        }
+                }
+            }
+            
+
+            //return ShortPath;
+        }
+
+
     }
 
 
-    class Vertex{
+
+
+    class Vertex
+    {
 
         public int X { get; set; }
 
         public Vertex() { }
         ~Vertex() { }
-        public Vertex(int x) {
+        public Vertex(int x)
+        {
             X = x;
         }
 
@@ -1047,7 +1179,8 @@ namespace Graph
     }
 
 
-    class Weight {
+    class Weight
+    {
         public int W { get; set; }
         public int W2 { get; set; }
         public Weight() { }
@@ -1061,7 +1194,7 @@ namespace Graph
             W = w;
             W2 = w2;
         }
-        
+
         public override string ToString()
         {
             return $"{W}";
@@ -1084,18 +1217,20 @@ namespace Graph
 
     class Edge
     {
-        public Vertex X { get; set; } 
-        public Vertex Y { get; set; } 
+        public Vertex X { get; set; }
+        public Vertex Y { get; set; }
         public Weight W { get; set; }
 
         public Edge() { }
-        public Edge(Vertex x, Vertex y, Weight w) {
+        public Edge(Vertex x, Vertex y, Weight w)
+        {
             X = x;
             Y = y;
             W = w;
         }
 
-        public override string ToString() {
+        public override string ToString()
+        {
             return $"({X}, {Y}) - {W}";
         }
 
@@ -1108,8 +1243,9 @@ namespace Graph
         {
             if (other == null) { return false; };
             return X.Equals(other.X) && X.Equals(other.X) && W.Equals(other.W);
-                
+
         }
     }
+
 
 }

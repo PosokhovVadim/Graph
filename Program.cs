@@ -28,7 +28,11 @@ namespace Graph
                               , @"D:\C#\graph\Graph\frame2.txt"
                               , @"D:\C#\graph\Graph\MaxFlow1.txt"
                               , @"D:\C#\graph\Graph\MaxFlow2.txt"
-                              , @"D:\C#\graph\Graph\MaxFlow3.txt"};
+                              , @"D:\C#\graph\Graph\MaxFlow3.txt"
+                              , @"D:\C#\graph\Graph\dijkstra1.txt"
+                              , @"D:\C#\graph\Graph\dijkstra2.txt"
+                              , @"D:\C#\graph\Graph\floyd1.txt"
+                              , @"D:\C#\graph\Graph\floyd2.txt"};
 
             int action;
             int value;
@@ -55,7 +59,7 @@ namespace Graph
                             Console.WriteLine("Choose action: \n0 - Add vertex,\n1 - Remove vertex,\n2 - Add edge" +
                                 "\n3 - Remove Edge\n4 - Write to result file\n5 - Write to current file\n6 - exit" +
                                 "\n7 - Task1.N9 \n8 - Task1.N12 \n9 - Task1.N15 \n10 - Task2.N17 \n11 - Task2.N38 \n12 - Create MST " +
-                                "\n16 - Find Max Flow");
+                                "\n13 - Task4.12(Dijkstra's algorithm) \n16 - Find Max Flow");
                             action = Convert.ToInt32(Console.ReadLine());
                             switch (action)
                             {
@@ -145,7 +149,6 @@ namespace Graph
                                     else
                                     {
                                         Console.WriteLine("Граф неориентированный");
-
                                     }
                                     break;
 
@@ -158,8 +161,46 @@ namespace Graph
                                 
                                     break;
                                 case 13:
+                                    //
+                                    if (g.isweighted && g._isoriented)
+                                    {
+                                        Console.Write("Список вершину: ");
+                                        foreach (var vertex in g.GetVertices())
+                                        {
+                                            Console.Write($"{vertex.X}, ");
+                                        }
+                                        Console.WriteLine();
+                                        Console.Write("First vertex: ");
+                                        x = new Vertex((Convert.ToInt32(Console.ReadLine())));
+                                        Console.Write("Second vertex: ");
+                                        y = new Vertex((Convert.ToInt32(Console.ReadLine())));
+                                        List<Vertex> res = new List<Vertex>();
+                                        res = g.ShosrtestPath_Dijkstra(x, y);
+                                        Console.WriteLine("Кратчайший путь: ");
+                                        foreach (var vertex in res) { Console.Write($"{vertex.X}, "); }
+                                    }
+                                    else Console.WriteLine("Граф неориентирован и/или не взвешан");
+
                                     break;
                                 case 14:
+                                    if (g.isweighted && g._isoriented)
+                                    {
+                                        Console.Write("Список вершину: ");
+                                        foreach (var vertex in g.GetVertices())
+                                        {
+                                            Console.Write($"{vertex.X}, ");
+                                        }
+                                        Console.WriteLine();
+                                        Console.Write("First vertex: ");
+                                        x = new Vertex((Convert.ToInt32(Console.ReadLine())));
+                                        Console.Write("Second vertex: ");
+                                        y = new Vertex((Convert.ToInt32(Console.ReadLine())));
+                                        List<Vertex> res = new List<Vertex>();
+                                        g.Floyd(x, y);
+                                        Console.WriteLine("Кратчайший путь: ");
+                                        foreach (var vertex in res) { Console.Write($"{vertex.X}, "); }
+                                    }
+                                    else Console.WriteLine("Граф неориентирован и/или не взвешан");
                                     break;
                                 case 15:
                                     break;
