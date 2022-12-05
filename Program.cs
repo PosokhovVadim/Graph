@@ -32,7 +32,8 @@ namespace Graph
                               , @"D:\C#\graph\Graph\dijkstra1.txt"
                               , @"D:\C#\graph\Graph\dijkstra2.txt"
                               , @"D:\C#\graph\Graph\floyd1.txt"
-                              , @"D:\C#\graph\Graph\floyd2.txt"};
+                              , @"D:\C#\graph\Graph\floyd2.txt"
+                              , @"D:\C#\graph\Graph\Centre.txt"};
 
             int action;
             int value;
@@ -185,20 +186,10 @@ namespace Graph
                                 case 14:
                                     if (g.isweighted && g._isoriented)
                                     {
-                                        Console.Write("Список вершину: ");
-                                        foreach (var vertex in g.GetVertices())
-                                        {
-                                            Console.Write($"{vertex.X}, ");
-                                        }
-                                        Console.WriteLine();
-                                        Console.Write("First vertex: ");
-                                        x = new Vertex((Convert.ToInt32(Console.ReadLine())));
-                                        Console.Write("Second vertex: ");
-                                        y = new Vertex((Convert.ToInt32(Console.ReadLine())));
-                                        List<Vertex> res = new List<Vertex>();
-                                        g.Floyd(x, y);
-                                        Console.WriteLine("Кратчайший путь: ");
-                                        foreach (var vertex in res) { Console.Write($"{vertex.X}, "); }
+                                        
+                                        List<Vertex> centre =  g.CentreOfGraph();
+                                        Console.WriteLine("Центр графа: ");
+                                        foreach (var vertex in centre) { Console.Write($"{vertex.X}, "); }
                                     }
                                     else Console.WriteLine("Граф неориентирован и/или не взвешан");
                                     break;

@@ -1097,15 +1097,15 @@ namespace Graph
             return ShortPath;
         }
 
-        public void Floyd(Vertex u, Vertex v)
+        public int[,] Floyd()
         {
             //
-            int from = u.X;
-            int to = v.X;
+          /*  int from = u.X;
+            int to = v.X;*/
             int n = Vertices.Count();
 
             int[,] C = new int[n, n];
-            int[,] H = new int[n, n];
+            //int[,] H = new int[n, n];
 
             foreach (var edge in Edges)
             {
@@ -1119,10 +1119,11 @@ namespace Graph
                 for (int j = 0; j < n; j++)
                 {
 
-                    if (C[i, j] == 0 && i != j) { C[i, j] = int.MaxValue; }
-                    if (i == j) C[i, j] = 0;
+                    if (C[i, j] == 0) { C[i, j] = int.MaxValue; }
+                    //if (i == j) C[i, j] = 0;
                 }
             }
+            
             for (int k = 0; k < n; k++)
             {
                 for (int i = 0; i < n; i++)
@@ -1132,19 +1133,59 @@ namespace Graph
                             if (C[i,j] > C[k, j] + C[i,k] && C[i,k] != int.MaxValue && C[k,j] != int.MaxValue )
                             {
                                 C[i, j] = C[k, j] + C[i, k];
-                                H[i, j] = k;
+                                //H[i, j] = k;
                             }
                         }
                 }
             }
-            
 
+            return C;
             //return ShortPath;
+        }
+        public List<Vertex> CentreOfGraph()
+        {
+            int[,] C = Floyd();
+            Dictionary<Vertex, int> eccentricity = new Dictionary<Vertex, int>();
+            foreach (var vertex in Vertices)
+            {
+                int currV = vertex.X - 1;
+                int max = int.MinValue;
+                for (int i = 0; i < Vertices.Count; i++)
+                {
+                    for (int j = 0; j < Vertices.Count; j++)
+                    {
+                        if (j == currV && C[i, j] > max && i != j && C[i, j] != int.MaxValue)
+                        {
+                            max = C[i, j];
+                        }
+                    }
+                }
+
+                eccentricity.Add(vertex, max);
+
+            }
+
+            var rad = int.MaxValue;
+            foreach (var ver in eccentricity.Values)
+            {
+                if (ver < rad && ver != int.MinValue)
+                    rad = ver;
+            }
+            List<Vertex> Centre = new List<Vertex>();
+            foreach (var vertex in eccentricity)
+            {
+                if (vertex.Value == rad)
+                {
+                    Centre.Add(vertex.Key);
+                }
+            }
+
+            return Centre;
+
         }
 
 
     }
-
 
 
 
