@@ -33,7 +33,8 @@ namespace Graph
                               , @"D:\C#\graph\Graph\dijkstra2.txt"
                               , @"D:\C#\graph\Graph\floyd1.txt"
                               , @"D:\C#\graph\Graph\floyd2.txt"
-                              , @"D:\C#\graph\Graph\Centre.txt"};
+                              , @"D:\C#\graph\Graph\Centre.txt"
+                              , @"D:\C#\graph\Graph\Ford_Bellman.txt"};
 
             int action;
             int value;
@@ -194,7 +195,25 @@ namespace Graph
                                     else Console.WriteLine("Граф неориентирован и/или не взвешан");
                                     break;
                                 case 15:
+
+                                    if (g.isweighted)
+                                    {
+                                        Console.Write("Список вершину: ");
+                                        foreach (var vertex in g.GetVertices())
+                                        {
+                                            Console.Write($"{vertex.X}, ");
+                                        }
+                                        Console.WriteLine();
+                                        Console.Write("First vertex: ");
+                                        x = new Vertex((Convert.ToInt32(Console.ReadLine())));
+                                        List<Vertex> res = new List<Vertex>();
+                                        res = g.DistLessN(-1, x);
+                                        Console.WriteLine("вершины орграфа, расстояние от которых до заданной вершины не более N");
+                                        foreach (var vertex in res) { Console.Write($"{vertex.X}, "); }
+                                    }
+                                    else Console.WriteLine("Граф неориентирован и/или не взвешан");
                                     break;
+
                                 case 16:
                                     Console.WriteLine(g.Max_Flow());
                                     break;

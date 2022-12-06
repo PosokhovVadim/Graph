@@ -1184,7 +1184,88 @@ namespace Graph
 
         }
 
+        //Belman-Ford Algorithm
+        
+        public int[] Belman_Ford(Vertex u1)
+        {
+            int from = u1.X - 1;
+            int n = Vertices.Count();
+            int[] D = new int[n];
+            int[] P = new int[n];
 
+            int[,] C = new int[n, n];
+
+            //bool[] visited = new bool[n];
+            foreach (var edge in Edges)
+            {
+                int i = edge.X.X;
+                int j = edge.Y.X;
+                C[i - 1, j - 1] = edge.W.W;
+            }
+
+            for (int i = 0; i < D.Length; i++)
+            {
+                if (from == i) D[i] = 0; else D[i] = int.MaxValue;
+
+                //visited[i] = false;
+            }
+
+
+            for (int i = 1; i < n - 1; i++)
+            {
+                foreach (var edge in Edges)
+                {
+                    int u = edge.X.X - 1;
+                    int v = edge.Y.X - 1;
+                    int w = edge.W.W;
+
+                    var tmpDist = D[u] + w;
+
+                    if (tmpDist < D[v] && D[u] != int.MaxValue)
+                    {
+                        D[v] = tmpDist;
+                    }
+                }
+            }
+
+            //проверка на отрицательный цикл 
+            bool fl= true;
+
+                foreach (var edge in Edges)
+                {
+                    int u = edge.X.X - 1;
+                    int v = edge.Y.X - 1;
+                    int w = edge.W.W;
+
+                    var tmpDist = D[u] + w;
+
+                    if (tmpDist < D[v] && D[u] != int.MaxValue)
+                    {
+                        fl = false;
+
+                    }
+                }
+    
+            if (!fl)
+            {
+                Console.WriteLine("В графе есть циклы отрицательного веса");
+            }
+            return D;
+        }
+
+        public List<Vertex> DistLessN(int n, Vertex v)
+        {
+            List<Vertex> res = new List<Vertex>();
+            foreach (var vertex in Vertices)
+            {
+                int[] D = Belman_Ford(vertex);
+                if (D[v.X - 1] <= n)
+                {
+                    res.Add(vertex);
+                }
+            }
+            return res;
+        }
     }
 
 
