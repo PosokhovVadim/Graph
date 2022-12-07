@@ -34,7 +34,8 @@ namespace Graph
                               , @"D:\C#\graph\Graph\floyd1.txt"
                               , @"D:\C#\graph\Graph\floyd2.txt"
                               , @"D:\C#\graph\Graph\Centre.txt"
-                              , @"D:\C#\graph\Graph\Ford_Bellman.txt"};
+                              , @"D:\C#\graph\Graph\Ford_Bellman.txt"
+                              , @"D:\C#\graph\Graph\floyd3.txt"};
 
             int action;
             int value;
@@ -61,7 +62,7 @@ namespace Graph
                             Console.WriteLine("Choose action: \n0 - Add vertex,\n1 - Remove vertex,\n2 - Add edge" +
                                 "\n3 - Remove Edge\n4 - Write to result file\n5 - Write to current file\n6 - exit" +
                                 "\n7 - Task1.N9 \n8 - Task1.N12 \n9 - Task1.N15 \n10 - Task2.N17 \n11 - Task2.N38 \n12 - Create MST " +
-                                "\n13 - Task4.12(Dijkstra's algorithm) \n16 - Find Max Flow");
+                                "\n13 - Task4.12(Dijkstra's algorithm)\n14 - Task4.11\n15 - Task4.8 \n16 - Find Max Flow");
                             action = Convert.ToInt32(Console.ReadLine());
                             switch (action)
                             {
@@ -166,7 +167,7 @@ namespace Graph
                                     //
                                     if (g.isweighted && g._isoriented)
                                     {
-                                        Console.Write("Список вершину: ");
+                                        Console.Write("Список вершин: ");
                                         foreach (var vertex in g.GetVertices())
                                         {
                                             Console.Write($"{vertex.X}, ");
@@ -198,7 +199,7 @@ namespace Graph
 
                                     if (g.isweighted)
                                     {
-                                        Console.Write("Список вершину: ");
+                                        Console.Write("Список вершин: ");
                                         foreach (var vertex in g.GetVertices())
                                         {
                                             Console.Write($"{vertex.X}, ");
@@ -207,7 +208,8 @@ namespace Graph
                                         Console.Write("First vertex: ");
                                         x = new Vertex((Convert.ToInt32(Console.ReadLine())));
                                         List<Vertex> res = new List<Vertex>();
-                                        res = g.DistLessN(-1, x);
+                                        int n = ((Convert.ToInt32(Console.ReadLine())));
+                                        res = g.DistLessN(n, x);
                                         Console.WriteLine("вершины орграфа, расстояние от которых до заданной вершины не более N");
                                         foreach (var vertex in res) { Console.Write($"{vertex.X}, "); }
                                     }

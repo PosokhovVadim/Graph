@@ -24,10 +24,6 @@ namespace Graph
 
         private string Path;
         private bool fl;
-        //Vertex V = new Vertex();
-
-        //List<Edge> E = new List<Edge>();
-
 
         private Dictionary<Vertex, List<Dictionary<Vertex, Weight>>> G = new Dictionary<Vertex, List<Dictionary<Vertex, Weight>>>();
 
@@ -586,8 +582,6 @@ namespace Graph
 
         public void AllPathes(Vertex v, int depth, int _depth, List<Vertex> Path, List<List<Vertex>> pathes)
         {
-
-
             List<Dictionary<Vertex, Weight>> adj = new List<Dictionary<Vertex, Weight>>();
             foreach (var key in G.Keys)
             {
@@ -1099,13 +1093,10 @@ namespace Graph
 
         public int[,] Floyd()
         {
-            //
-          /*  int from = u.X;
-            int to = v.X;*/
+
             int n = Vertices.Count();
 
             int[,] C = new int[n, n];
-            //int[,] H = new int[n, n];
 
             foreach (var edge in Edges)
             {
@@ -1120,7 +1111,6 @@ namespace Graph
                 {
 
                     if (C[i, j] == 0) { C[i, j] = int.MaxValue; }
-                    //if (i == j) C[i, j] = 0;
                 }
             }
             
@@ -1133,14 +1123,12 @@ namespace Graph
                             if (C[i,j] > C[k, j] + C[i,k] && C[i,k] != int.MaxValue && C[k,j] != int.MaxValue )
                             {
                                 C[i, j] = C[k, j] + C[i, k];
-                                //H[i, j] = k;
                             }
                         }
                 }
             }
 
             return C;
-            //return ShortPath;
         }
         public List<Vertex> CentreOfGraph()
         {
@@ -1193,21 +1181,9 @@ namespace Graph
             int[] D = new int[n];
             int[] P = new int[n];
 
-            int[,] C = new int[n, n];
-
-            //bool[] visited = new bool[n];
-            foreach (var edge in Edges)
-            {
-                int i = edge.X.X;
-                int j = edge.Y.X;
-                C[i - 1, j - 1] = edge.W.W;
-            }
-
             for (int i = 0; i < D.Length; i++)
             {
                 if (from == i) D[i] = 0; else D[i] = int.MaxValue;
-
-                //visited[i] = false;
             }
 
 
